@@ -28,7 +28,7 @@ chcp 65001; javac "-encoding UTF-8" -d bin src/main/java/dev/raid/*.java; java -
 javac -d bin src/main/java/dev/raid/*.java && java -cp bin dev.raid.Main
 ```
 
-## ⚙️ 시스템 동작 흐름
+## ⚙️ 시스템 설명
 이 프로젝트는 각 스레드가 서로 통신하며 각자의 필드를 조작하며 동작합니다.
 
 ### 1. 스레드 생성
@@ -36,4 +36,7 @@ javac -d bin src/main/java/dev/raid/*.java && java -cp bin dev.raid.Main
 
 ### 2. 스레드 통신
 `MessageQueue`를 통해서 `Hero`스레드와 `Enemy`스레드가 통신합니다. `Hero`스레드들이 메시지 큐에 가할 데미지가 담긴 메시지를 enqueue하면 `Enemy`스레드는 그 메시지를 dequeue하여 체력을 소모합니다.  
-`Enemy`스레드가 `Hero`스레드에 가하는 데미지와 `Healer`스레드가 `Hero`스레드에게 회복하는 회복량은 메시지 큐가 아닌 `Hero`클래스의 `synchronized`메소드를 이용해서 전달됩니다. 이는 `Hero`스레드보다 다른 스레드의 수가 적어서 dequeue에서 대기해야 하는 시간이 매우 길어지기 때문입니다.
+`Enemy`스레드가 `Hero`스레드에 가하는 데미지와 `Healer`스레드가 `Hero`스레드에게 회복하는 회복량은 메시지 큐가 아닌 `Hero`클래스의 `synchronized`메소드를 이용해서 전달됩니다. 이는 `Hero`스레드보다 다른 스레드의 수가 적어서 dequeue에서 대기해야 하는 시간이 매우 길어지기 때문입니다.  
+
+### 3. `CopyOnWriteArrayList`
+`CopyOnWriteArrayList`를 통해서 `Hero`객체 배열을 유지합니다. `CopyOnWriteArrayList`는 배열에 쓰기 연산이 들어오면 원래의 배열에 쓰는 것이 아니라 같은 내용의 새로운 배열을 생성해서 그 배열에 쓰기를 수행합니다. 쓰기가 완료되면 참조 위치를 새로 생성된 배열로 옮기게 됩니다. 이러한 특성 때문에 읽기 연산이 얼마나 많이 들어오든 쓰기 연산은 대기 없이 수행될 수 있게 됩니다. 그러므로 `Healer`클래스의 removeIf에서 유지되는 `modCount`, 즉 수정 횟수에 따른 `ConcurrentModificationException`을 방지해줍니다.
