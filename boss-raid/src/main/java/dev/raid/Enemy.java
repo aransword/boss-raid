@@ -5,14 +5,28 @@ import java.util.List;
 import java.util.Random;
 
 public class Enemy extends Unit {
+    private final String name;
+    private final long maxHp;
     private MessageQueue messageQueue;
     private List<Hero> insects;
     private Random random = new Random();
+    private GameRenderer renderer;
 
-    public Enemy(long hp, long stat, List<Hero> heroes, MessageQueue messageQueue) {
+    public Enemy(String name, long hp, long stat, List<Hero> heroes, MessageQueue messageQueue, GameRenderer renderer) {
         super(hp, stat);
+        this.name = name;
+        this.maxHp = hp;
         this.insects = heroes;
         this.messageQueue = messageQueue;
+        this.renderer = renderer;
+    }
+
+    public long getMaxHp() {
+        return maxHp;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -21,9 +35,10 @@ public class Enemy extends Unit {
             Message message = messageQueue.dequeue();
             this.hp -= message.getDamage();
 
-            System.out.println("Boss hp: " + this.hp);
+            renderer.addLog(name + "에게 " + message.getDamage() + " 데미지! (HP: " + Math.max(0, this.hp) + ")");
 
             if (this.hp <= 0) {
+                renderer.addLog("💥 " + name + " 처치!");
                 setAlive(false);
             }
 
@@ -42,7 +57,7 @@ public class Enemy extends Unit {
             Hero targetInsect = liveInsects.get(targetIndex);
 
             if (targetInsect.getAlive()) {
-                targetInsect.takeDamage(stat);
+                targetInsect.takeDamage(stat, name);
             }
 
             try {
