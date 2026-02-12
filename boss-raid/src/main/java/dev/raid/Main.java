@@ -7,19 +7,20 @@ public class Main {
 	private static final int HERO = 14;
 
 	public static void main(String[] args) throws InterruptedException {
+		GameRenderer renderer = new GameRenderer();
 		MessageQueue messageQueue = new MessageQueue();
 
 		List<Hero> heroes = new ArrayList<>();
 		Thread[] heroThread = new Thread[HERO];
 		for (int i = 0; i < HERO; i++) {
-			heroes.add(new Hero(100, 10, messageQueue));
+			heroes.add(new Hero(i + 1, 100, 10, messageQueue, renderer));
 			heroThread[i] = new Thread(heroes.get(i)::action);
 			heroThread[i].setDaemon(true);
 		}
 
-		Enemy boss = new Enemy(1000, 10, heroes, messageQueue);
-		Enemy mob1 = new Enemy(300, 6, heroes, messageQueue);
-		Enemy mob2 = new Enemy(500, 8, heroes, messageQueue);
+		Enemy boss = new Enemy("Boss", 1000, 10, heroes, messageQueue, renderer);
+		Enemy mob1 = new Enemy("Mob 1", 300, 6, heroes, messageQueue, renderer);
+		Enemy mob2 = new Enemy("Mob 2", 500, 8, heroes, messageQueue, renderer);
 
 		Healer healer = new Healer(100, 5, heroes);
 
@@ -49,6 +50,8 @@ public class Main {
 		healerThread3.start();
 
 		while (true) {
+			// 화면 렌더링
+			renderer.render(boss, mob1, mob2, heroes);
 
 			// A. 적 팀 생존 확인
 			boolean isEnemyAlive = false;
@@ -65,25 +68,21 @@ public class Main {
 				}
 			}
 
-			// --- 4. 종료 조건 판별 ---
-
+			// --- 종료 조건 판별 ---
 			if (!isEnemyAlive) {
-				System.out.println("\n==============================");
-				System.out.println("🎉 VICTORY! 모든 적을 처치했습니다!");
-				System.out.println("==============================");
-				break; // 게임 루프 종료 -> 메인 종료
+				renderer.render(boss, mob1, mob2, heroes);
+				renderer.renderResult("🎉 VICTORY! 모든 적을 처치했습니다!");
+				break;
 			}
 
 			if (!isHeroAlive) {
-				System.out.println("\n==============================");
-				System.out.println("💀 GAME OVER... 영웅이 전멸했습니다.");
-				System.out.println("==============================");
-				break; // 게임 루프 종료 -> 메인 종료
+				renderer.render(boss, mob1, mob2, heroes);
+				renderer.renderResult("💀 GAME OVER... 영웅이 전멸했습니다.");
+				break;
 			}
 
-			// 너무 자주 검사하면 CPU 낭비하므로 1초마다 체크
-			Thread.sleep(1000);
+			// 200ms마다 화면 갱신
+			Thread.sleep(200);
 		}
 	}
-
 }
