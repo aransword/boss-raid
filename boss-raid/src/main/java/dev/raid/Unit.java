@@ -5,9 +5,9 @@ public abstract class Unit {
     protected long stat;
     protected boolean alive = true;
 
-    public Unit(long hp, long state) {
+    public Unit(long hp, long stat) {
         this.hp = hp;
-        this.stat = state;
+        this.stat = stat;
     }
 
     public long getHp() {
