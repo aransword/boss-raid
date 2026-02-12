@@ -1,4 +1,5 @@
 ![boss-raid_final](https://github.com/user-attachments/assets/38e887b7-e92f-4a68-b7b6-c2b7679c2ddb)
+<img width="853" height="1000" alt="image" src="https://github.com/user-attachments/assets/5e73a778-3bcf-4c00-aad6-68675d758a4d" />
 
 # [우리 FIS 아카데미 6기] Multi Thread Toy Project
 
