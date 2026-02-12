@@ -136,7 +136,7 @@ public class GameRenderer {
         sb.append("╠").append(border).append("╣\n");
 
         // 영웅 상태
-        sb.append("║  🛡\uFE0F  영웅 상태                                        ║\n");
+        sb.append("║  🛡\uFE0F  영웅 상태                                       ║\n");
         sb.append("║                                                      ║\n");
 
         int half = (heroes.size() + 1) / 2;

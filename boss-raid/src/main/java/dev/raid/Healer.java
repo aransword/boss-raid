@@ -13,7 +13,7 @@ public class Healer extends Unit {
     }
 
     public void checkAliveHeroes() {
-        heroes.removeIf(hero -> !hero.getAlive());
+        heroes.removeIf(hero -> hero != null && !hero.getAlive());
     }
 
     public void takeHeal() {
