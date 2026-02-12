@@ -1,31 +1,30 @@
 package dev.raid;
 
 public abstract class Unit {
-    private long hp;
-    private long state;
-    private boolean alive = true;
+    protected long hp;
+    protected long stat;
+    protected boolean alive = true;
 
     public Unit(long hp, long state) {
         this.hp = hp;
-        this.state = state;
+        this.stat = state;
     }
 
     public long getHp() {
         return hp;
     }
 
-    public long getState() {
-        return state;
+    public long getStat() {
+        return stat;
     }
 
     public boolean getAlive() {
         return alive;
     }
 
-    public boolean setAlive(boolean alive) {
+    public void setAlive(boolean alive) {
         this.alive = alive;
-        return alive;
     }
 
-    public abstract long action();
+    public abstract void action();
 }
