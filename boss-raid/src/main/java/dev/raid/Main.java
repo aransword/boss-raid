@@ -1,8 +1,8 @@
 package dev.raid;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main {
 	private static final int HERO = 14;
@@ -14,7 +14,7 @@ public class Main {
 		GameRenderer renderer = new GameRenderer();
 		MessageQueue messageQueue = new MessageQueue();
 
-		List<Hero> heroes = new ArrayList<>();
+		List<Hero> heroes = new CopyOnWriteArrayList<>();
 		Thread[] heroThread = new Thread[HERO];
 		for (int i = 0; i < HERO; i++) {
 			heroes.add(new Hero(i + 1, 100, 10, messageQueue, renderer));
@@ -40,6 +40,11 @@ public class Main {
 		Thread bossThread = new Thread(boss::action);
 		Thread mob1Thread = new Thread(mob1::action);
 		Thread mob2Thread = new Thread(mob2::action);
+
+		// 보스와 몹도 데몬 스레드로 설정하여 메인 스레드 종료 시 함께 종료되도록 함
+		bossThread.setDaemon(true);
+		mob1Thread.setDaemon(true);
+		mob2Thread.setDaemon(true);
 
 		for (int i = 0; i < HERO; i++) {
 			heroThread[i].start();

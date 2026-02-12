@@ -45,12 +45,12 @@ public class Enemy extends Unit {
             List<Hero> liveInsects = new ArrayList<>();
 
             for (Hero h : insects) {
-                if (h.getAlive())
+                if (h != null && h.getAlive())
                     liveInsects.add(h);
             }
 
             if (liveInsects.isEmpty()) {
-                break;
+                return;
             }
 
             int targetIndex = random.nextInt(liveInsects.size());
