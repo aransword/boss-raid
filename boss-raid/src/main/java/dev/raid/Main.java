@@ -20,7 +20,17 @@ public class Main {
 		Enemy boss = new Enemy(1000, 10, heroes, messageQueue);
 		Enemy mob1 = new Enemy(300, 6, heroes, messageQueue);
 		Enemy mob2 = new Enemy(500, 8, heroes, messageQueue);
-		
+    
+    Healer healer = new Healer(100, 5, heroes);
+
+		Thread healerThread = new Thread(healer::action);
+		Thread healerThread2 = new Thread(healer::action);
+		Thread healerThread3 = new Thread(healer::action);
+    
+    // 데몬 스레드: 메인 스레드 종료 시 자동으로 같이 종료됨
+		healerThread.setDaemon(true);
+		healerThread2.setDaemon(true);
+		healerThread3.setDaemon(true);
 		
 		Thread bossThread = new Thread(boss::action);
 		Thread mob1Thread = new Thread(mob1::action);
@@ -34,6 +44,10 @@ public class Main {
 		mob1Thread.start();
 		mob2Thread.start();
 
+    healerThread.start();
+		healerThread2.start();
+		healerThread3.start();
+    
 		while (true) {
             
             // A. 적 팀 생존 확인

@@ -17,6 +17,24 @@ public class Hero extends Unit {
     	this.hp += heal;
     }
 
+    public void heal(long stat) {
+        boolean a = false;
+
+        if (this.hp >= 100) {
+            return;
+        } else if (this.hp >= 95) {
+            this.hp = 100;
+            a = true;
+        } else {
+            this.hp += stat;
+            a = true;
+        }
+
+        if (a) {
+            System.out.println("Healer heals " + this.hp);
+        }
+    }
+
     @Override
     public void action() {
         while (alive) {
