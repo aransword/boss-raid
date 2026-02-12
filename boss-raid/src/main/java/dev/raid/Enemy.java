@@ -20,29 +20,31 @@ public class Enemy extends Unit {
         while (alive) {
             Message message = messageQueue.dequeue();
             this.hp -= message.getDamage();
-            
+
             System.out.println("Boss hp: " + this.hp);
-            
+
             if (this.hp <= 0) {
                 setAlive(false);
             }
-            
-            List<Hero> liveInsects = new ArrayList<>();
-            for(Hero h : insects) {
-            	if(h.getAlive())
-            		liveInsects.add(h);
-            }
-            
-            if(!liveInsects.isEmpty()) {      	
-            	int targetIndex = random.nextInt(liveInsects.size());
-            	Hero targetInsect = liveInsects.get(targetIndex);
 
-            	if(targetInsect.getAlive()) {
-            		targetInsect.takeDamage(stat);
-            	}
+            List<Hero> liveInsects = new ArrayList<>();
+
+            for (Hero h : insects) {
+                if (h.getAlive())
+                    liveInsects.add(h);
             }
-            
-            
+
+            if (liveInsects.isEmpty()) {
+                break;
+            }
+
+            int targetIndex = random.nextInt(liveInsects.size());
+            Hero targetInsect = liveInsects.get(targetIndex);
+
+            if (targetInsect.getAlive()) {
+                targetInsect.takeDamage(stat);
+            }
+
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {

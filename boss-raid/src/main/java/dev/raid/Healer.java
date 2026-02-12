@@ -18,6 +18,9 @@ public class Healer extends Unit {
 
     public void takeHeal() {
         checkAliveHeroes();
+        if (heroes.isEmpty()) {
+            return;
+        }
         int idx = random.nextInt(heroes.size());
         heroes.get(idx).heal(stat);
     }
@@ -28,7 +31,7 @@ public class Healer extends Unit {
             takeHeal();
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
