@@ -8,11 +8,34 @@ public class Hero extends Unit {
         this.messageQueue = messageQueue;
     }
 
+    public synchronized void takeDamage() {
+        Message message = messageQueue.dequeue();
+        this.hp -= message.getDamage();
+    }
+
+    public void heal(long stat) {
+        boolean a = false;
+
+        if (this.hp >= 100) {
+            return;
+        } else if (this.hp >= 95) {
+            this.hp = 100;
+            a = true;
+        } else {
+            this.hp += stat;
+            a = true;
+        }
+
+        if (a) {
+            System.out.println("Healer heals " + this.hp);
+        }
+    }
+
     @Override
     public void action() {
         while (true) {
-            Message message = new Message(getStat());
-            messageQueue.enqueue(message);
+            takeDamage();
+
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
