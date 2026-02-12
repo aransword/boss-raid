@@ -7,10 +7,14 @@ public class Hero extends Unit {
         super(hp, stat);
         this.messageQueue = messageQueue;
     }
-
-    public synchronized void takeDamage() {
-        Message message = messageQueue.dequeue();
-        this.hp -= message.getDamage();
+    
+    public synchronized void takeDamage(long damage) {
+    	this.hp -= damage;
+    	System.out.println(" 피격! (데미지: " + damage + ", 남은 HP: " + hp + ")");
+    }
+    
+    public synchronized void takeHeal(long heal) {
+    	this.hp += heal;
     }
 
     public void heal(long stat) {
@@ -33,9 +37,14 @@ public class Hero extends Unit {
 
     @Override
     public void action() {
-        while (true) {
-            takeDamage();
-
+        while (alive) {
+            Message message = new Message(getStat());
+            messageQueue.enqueue(message);
+            
+            if (this.hp <= 0) {
+                setAlive(false);
+            }
+            
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
