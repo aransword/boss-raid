@@ -1,12 +1,16 @@
 package dev.raid;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 	private static final int HERO = 14;
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws Exception {
+		// UTF-8 출력 설정 (JAR 실행 시에도 한글/이모지 깨짐 방지)
+		System.setOut(new PrintStream(System.out, true, "UTF-8"));
+
 		GameRenderer renderer = new GameRenderer();
 		MessageQueue messageQueue = new MessageQueue();
 
